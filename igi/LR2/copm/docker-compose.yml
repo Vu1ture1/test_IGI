@@ -1,0 +1,38 @@
+version: '3.9'
+name: compose_file
+
+services:
+  
+    mongo-db:
+        container_name: mongo-db_container
+        image: mongo
+        restart: always
+        volumes:
+            - dbdata:/data/db
+        ports:
+            - 27017:27017
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: root_password
+        networks:
+            - db-network
+
+    mongo-db-express:
+        container_name: mongo-db-express-container
+        image: mongo-express
+        restart: always
+        depends_on:
+            - mongo-db
+        ports:
+            - 8081:8081
+        environment:
+            ME_CONFIG_BASICAUTH_USERNAME: admin
+            ME_CONFIG_BASICAUTH_PASSWORD: admin_password
+            ME_CONFIG_MONGODB_URL: mongodb://root:root_password@mongo-db:27017/
+        networks:
+            - db-network
+volumes:
+    dbdata:
+    
+networks:
+    db-network:
