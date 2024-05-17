@@ -1,0 +1,6 @@
+tree_type,ForestPlot_Pop,ForestPlot_healthy_trees,forestplot_name
+береза,10,5,1
+береза,20,10,2
+ель,30,15,3
+дуб,12,3,3
+Хвоя,23,15,4
