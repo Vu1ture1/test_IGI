@@ -1,0 +1,145 @@
+<head>
+    <style>
+        .med-container {
+            display: grid;
+            grid-template-columns: 1fr;
+    
+            gap: 20px;
+            
+            width: 60%;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .med-container p {
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .med-container button {
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .med-container button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .butt-container {
+            display: flex;
+            width: 60%;
+            height: auto;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .butt-container button {
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .butt-container button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .dep-card {
+            position: relative;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            height: 100%;
+            min-width: 300px;
+            min-height: 300px;
+            margin-bottom: 10px;
+        }
+
+        .dep-card form {
+            position: absolute;  
+            right: 0;           
+            bottom: 0;         
+        }
+
+        .image {
+            width: 250px;
+            height: auto;
+        }
+
+        .med-item {
+            display: flex;
+            align-items: center; /* Это выравнивает изображение и информацию по вертикали */
+            gap: 20px; /* Это добавляет пространство между изображением и информацией */
+            word-wrap: break-word;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+
+{% extends "base.html" %}
+{% block refs%}{% endblock refs%}
+
+{% block content %}
+<h1 class="center">Медикаменты отдела {{dep.type_of_medicine}}</h1>
+<div class="butt-container">
+    <p style="margin-right: 10px;">Отсортировать по цене:</p>
+    <form action="/department/" method="get">
+        {% csrf_token %}
+        <input type="hidden" name="id" value={{ dep.id }}>
+        <input type="hidden" name="order" value="price_low">
+        <button style="width: 150px; height: 30px;" type="submit">По убыванию</button>
+    </form>
+    <form action="/department/" method="get">
+        {% csrf_token %}
+        <input type="hidden" name="id" value={{ dep.id }}>
+        <input type="hidden" name="order" value="price_high">
+        <button style="width: 150px; height: 30px;" type="submit">По возрастанию</button>
+    </form>
+</div>
+
+<div class="med-container">
+    {% if meds|length != 0 %}
+        {% for element in meds %}
+        <div class="med-item">
+            <img class="image" src={{ element.med_png.url }} alt="Medicine Image">
+            <div style="word-wrap: break-word;">
+                <p>Название: {{element.name}}</p>
+                <p>Описание: {{element.description}}</p>
+                <p>Инструкция: {{element.instruction}}</p>
+                <h3>Цена: {{element.price}}{{" руб."}}</h3>
+
+                {%if request.COOKIES.role == "True"%}
+                    <div style="margin-bottom: 15px; margin-top: 15px; margin-right: 10px; word-wrap: break-word;">Продано кол-во: {{" "}}{{element.all_sold_num}}{{" шт."}}</div>
+                {%endif%}
+
+                {% if request.COOKIES.username %}
+                    <form action="/department/" method="get">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ dep.id }}">
+                        <input type="hidden" name="med_id" value="{{ element.id }}">
+                        <button style="width: 150px; height: 30px;" type="submit">Добавить в корзину</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>В этом отделе пока нет медикаментов.</p>
+    {% endif %}
+</div>
+{% endblock content %}

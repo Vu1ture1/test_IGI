@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        .nav {
+            display: flex;
+        }
+        .nav a {
+            padding: 10px;
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            transition: background-color 0.1s;
+        }
+        .nav a:hover {
+            background-color: black;
+            color: white;
+        }
+        
+        </style>
+</head>
+<body>
+
+    <div class="nav">
+        <a href="/">Отделы аптеки</a>
+        <a href="/faq">О аптеке</a>
+        <a href="/reviews">Наши отзывы</a>
+        <a href="/faq/contacts">Наши сотрудники</a>
+        {%if request.COOKIES.role == "True"%}
+            <a href="/suppliers">Поставщики</a>
+            <a href="/graph">График выручки</a>
+        {%endif%}
+        
+        {% block refs%}{% endblock refs%}
+
+        <div style="margin-left: auto; margin-top: 10px;">
+            {% if request.COOKIES.username %}
+                <a href="/basket">Корзина</a>
+                <a href="/account">Аккаунт</a>
+
+                {%if request.COOKIES.admin == "True"%}
+                    <a href="/admin">Панель админа</a>
+                {%endif%}
+
+                <a href="/logout">Выход</a>
+            {% else %}
+                <a href="/login">Вход</a>
+                <a href="/registration">Регистрация</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div style="margin-top: 20px;">{% block content%}{% endblock content %}</div>
+
+</body>
+</html>

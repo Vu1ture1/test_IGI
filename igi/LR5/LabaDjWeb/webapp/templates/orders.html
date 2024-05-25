@@ -1,0 +1,144 @@
+<head>
+    <style>
+        .med-container {
+            display: grid;
+            grid-template-columns: 1fr;
+    
+            gap: 20px;
+            
+            width: 60%;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .med-container p {
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .med-container button {
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .med-container button:hover {
+            background-color: red;
+            color: white;
+        }
+
+        .butt-container {
+            display: flex;
+            width: 60%;
+            height: auto;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .butt-container button {
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .butt-container button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .div_1{
+            display: flex;
+        }
+
+        .div_1 button {
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .div_1 button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .dep-card {
+            position: relative;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            height: 100%;
+            min-width: 300px;
+            min-height: 300px;
+            margin-bottom: 10px;
+        }
+
+        .dep-card form {
+            position: absolute;  
+            right: 0;           
+            bottom: 0;         
+        }
+
+        .image {
+            width: 300px;
+            height: 150px;
+        }
+
+        .med-item {
+            display: flex;
+            border: 1px solid #ccc;
+            padding: 10px;
+            align-items: center; /* Это выравнивает изображение и информацию по вертикали */
+            gap: 20px; /* Это добавляет пространство между изображением и информацией */
+            word-wrap: break-word;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+
+{% extends "base.html" %}
+{% block refs%}{% endblock refs%}
+
+{% block content %}
+<h1 class="center">Заказы</h1>
+
+<div class="med-container">
+    {% if myorders|length != 0 %}
+        {% for element in myorders %}
+        <div class="med-item">
+            <div style="word-wrap: break-word;">
+                <p>Все медикаменты в заказе:</p>
+                <p style="color: gray; font-size: 15px;">Дата: {{element.date_created}}</p>
+                {% for med in element.meds.all %}
+                    <p>Название: {{med.medicine.name}}</p>
+                    <p>Описание: {{med.medicine.description}}</p>
+                    <p>Инструкция: {{med.medicine.instruction}}</p>
+                    <p>Цена: {{med.medicine.price}}{{" руб."}}</p>
+                    <p>Кол-во: {{med.quantity}}{{" шт."}}</p>
+                {% endfor %}
+                <h4>Точка самовывоза: {{element.pick_up_point.pick_up_point}}</h4>
+
+                <h3>Цена заказа: {{element.total_price}} руб.</h3>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>Нет заказов.</p>
+    {% endif %}
+</div>
+{% endblock content %}

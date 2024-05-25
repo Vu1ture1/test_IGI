@@ -1,0 +1,150 @@
+<head>
+    <style>
+        .med-container {
+            display: grid;
+            grid-template-columns: 1fr;
+    
+            gap: 20px;
+            
+            width: 60%;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .med-container p {
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .med-container button {
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .med-container button:hover {
+            background-color: red;
+            color: white;
+        }
+
+        .butt-container {
+            display: flex;
+            width: 60%;
+            height: auto;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .butt-container button {
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .butt-container button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .div_1{
+            display: flex;
+        }
+
+        .div_1 button {
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .div_1 button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .dep-card {
+            position: relative;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            height: 100%;
+            min-width: 300px;
+            min-height: 300px;
+            margin-bottom: 10px;
+        }
+
+        .dep-card form {
+            position: absolute;  
+            right: 0;           
+            bottom: 0;         
+        }
+
+        .image {
+            width: 300px;
+            height: 150px;
+        }
+
+        .med-item {
+            display: flex;
+            align-items: center; /* Это выравнивает изображение и информацию по вертикали */
+            gap: 20px; /* Это добавляет пространство между изображением и информацией */
+            word-wrap: break-word;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+
+{% extends "base.html" %}
+{% block refs%}{% endblock refs%}
+
+{% block content %}
+<h1 class="center">Заказ</h1>
+<div class="med-container">
+    <div class="div_1">
+        <h4>{{"Общая цена заказа "}}{{total}}{{" рублей"}}</h4>
+        
+        <form style="margin-top: 4px; margin-left: 50px;" action="/basket/order/" method="post">
+            {% csrf_token %}
+
+            <select style="height: 30px; margin-right: 40px;" name="my_option" onchange="showValue(this)">
+                <option value="{{ 0 }}">{{ "Промокода нет" }}</option>
+                
+                {% for item in list %}
+                    <option value="{{ item.discount }}">{{ item.promo_str }}</option>
+                {% endfor %}
+            </select>
+
+            <select style="height: 30px; min-width: 160px; margin-right: 40px;" name="my_option_point">
+                {% for point in points %}
+                    <option value="{{ point.id }}">{{ point.pick_up_point }}</option>
+                {% endfor %}
+            </select>
+
+            <button style="width: 125px; height: 30px;" type="submit">Отправить заказ</button>
+        </form>
+        
+    </div>
+</div>
+
+<script>
+    function showValue(select) {
+        var value = select.value;
+        alert("Скидка: " + value + " рублей");
+    }    
+</script>
+{% endblock content %}

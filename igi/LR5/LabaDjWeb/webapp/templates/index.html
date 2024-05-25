@@ -1,0 +1,153 @@
+<head>
+    <style>
+        .med-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 3fr));
+
+            gap: 20px;
+            
+            width: 60%;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .med-container button {
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .med-container button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .dep-card {
+            position: relative;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            height: 100%;
+            min-width: 300px;
+            min-height: 350px;
+            margin-bottom: 10px;
+        }
+
+        .dep-card form {
+            position: absolute;  
+            right: 0;           
+            bottom: 0;         
+        }
+
+        .image {
+            width: 200px;
+            height: auto;
+        }
+
+        .news-container {
+            display: grid;
+            grid-template-columns: 1fr;
+    
+            gap: 20px;
+            
+            width: 60%;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .news-container p {
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .news-item {
+            display: flex;
+            align-items: center; /* Это выравнивает изображение и информацию по вертикали */
+            gap: 20px; /* Это добавляет пространство между изображением и информацией */
+            word-wrap: break-word;
+        }
+
+
+        .link-button {
+            background: none;
+            color: black;
+            border: none;
+            text-decoration: none;
+            display: block;  
+            font-size: 15px;
+        }
+        .link-button:hover {
+            color: gray;
+        }
+    </style>
+</head>
+
+{% extends "base.html" %}
+{% block refs%}{% endblock refs%}
+
+{% block content %}
+<h1 class="center">Последняя новость аптеки</h1>
+<div class="news-container">
+    {%if news != "0"%}
+        <div class="news-item">
+            <img class="image" src={{ news.news_png.url }}>
+                <div style="word-wrap: break-word;">
+                    <p style="color: gray; font-size: 15px;">Дата: {{news.date_created}}</p>
+                    <p style="font-size: 20px;">Содержание: {{news.news_message}}</p>
+                </div>
+        </div>
+        <form action="news/" method="get">
+            <button class="link-button" type="submit">Смотреть новости далее...</button>
+        </form>
+    {%else%}
+        <p>Нет новостей на текущий момент.</p>
+    {%endif%}
+</div>
+
+<div>
+    <h1 class="center" style="margin-top: 80px;">Отделы аптеки</h1>
+
+    <div class="med-container">
+        {%if deps|length != 0%}
+            {% for element in deps %} 
+                <div class="dep-card">
+                <h3 style="margin-left: 10px;">Об отделе аптеки:</h3>
+                <div style="margin-left: 10px; margin-right: 10px; word-wrap: break-word;">{{element.description}}</div>
+                <div style="margin-top: 15px; margin-left: 10px; margin-right: 10px; word-wrap: break-word;">Тип медикаментов в отделе: {{element.type_of_medicine}}</div>
+                    
+                {%if request.COOKIES.role == "True"%}
+                    <div style="margin-top: 15px; margin-left: 10px; margin-right: 10px; word-wrap: break-word;">Продано всего в отделе: {{" "}}{{element.all_sold_num}}{{" руб."}}</div>
+                {%endif%}
+                
+                    <form action="department/" method="get">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value={{ element.id }}>
+                        <button style="width: 100px; height: 30px;" type="submit">Ассортимент</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {%else%}
+            <p>Нет отделов на текущий момент.</p>
+        {%endif%}
+
+    </div>
+</div>
+
+
+
+
+{% endblock content %}

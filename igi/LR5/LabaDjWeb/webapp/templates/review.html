@@ -1,0 +1,183 @@
+<head>
+    <style>
+        .med-container {
+            display: grid;
+            grid-template-columns: 1fr;
+    
+            gap: 20px;
+            
+            width: 60%;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .med-container p {
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .med-container button {
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .med-container button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .butt-container {
+            display: flex;
+            width: 60%;
+            height: auto;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .butt-container button {
+            text-decoration: none;
+            color:black;
+            background-color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .butt-container button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .div_1{
+            width: 60%;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 40px;
+        }
+
+        .div_1 button {
+            text-decoration: none;
+            color:black;
+            width: 120px;
+            height: 30px;
+            background-color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-right: 15px;
+            transition: background-color 0.1s;
+        }
+        .div_1 button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .dep-card {
+            position: relative;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            height: 100%;
+            min-width: 300px;
+            min-height: 300px;
+            margin-bottom: 10px;
+        }
+
+        .dep-card form {
+            position: absolute;  
+            right: 0;           
+            bottom: 0;         
+        }
+
+        .image {
+            width: 300px;
+            height: 150px;
+        }
+
+        .med-item {
+            display: flex;
+            border: 1px solid #ccc;
+            align-items: center; /* Это выравнивает изображение и информацию по вертикали */
+            word-wrap: break-word;
+        }
+
+        .med-item p{
+            margin: 20px;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        
+    </style>
+</head>
+
+{% extends "base.html" %}
+{% block refs%}{% endblock refs%}
+
+{% block content %}
+<h1 class="center">Оставьте свой отзыв</h1>
+
+{% if request.COOKIES.username %}
+    <div class="div_1">
+        <form action="reviews/" method="post">
+            {% csrf_token %}
+            
+            <textarea name="text" style="width: 100%; border-radius: 5px; height: 80px;" placeholder="Написать отзыв" required></textarea>
+            
+            <p style="margin-left: 5px;">Поставьте отценку сайту аптеки:</p>
+            <input name="ran" style="display: block; width: 50%; margin-top: 10px;" type="range" min="0" max="10" value="0" id="myRange" oninput="edited()">
+            <p style="margin-left: 5px;">Отценка: <span id="rangeValue">0</span>{{"★"}}</p>
+            
+            <button style="display: block; margin-top: 20px;" type="submit">Оставить отзыв</button>
+        </form>
+    </div>
+{% else %}
+<div class="div_1">
+    <p style="text-align: center; font-size: 18px;">Для того чтобы писать отзывы, войдите в аккаунт.</p>
+</div>
+{% endif %}
+
+<h1 class="center">Все отзывы</h1>
+
+<div class="med-container">
+
+    {%if comments|length != 0%}
+        {% for element in comments %} 
+            <div class="med-item">
+                <div>
+                <p>Отзыв пользователя {{element.user.username}} {{":"}}</p>
+                <p style="color: gray; font-size: 15px;">{{element.date_created}}</p>
+                <p>{{element.context}}</p>
+                <p>Оценка аптеки: {{element.mark}}{{"★"}}</text></p>
+                </div>
+            </div>
+        {% endfor %}
+    {%else%}
+        <p>Нет отзывов на текущий момент.</p>
+    {%endif%}
+</div>
+
+<script>
+
+    function edited(){
+        var range = document.getElementById('myRange').value;
+
+        var rangeValue = document.getElementById('rangeValue');
+
+        rangeValue.textContent = range
+    }
+</script>
+
+{% endblock content %}
+

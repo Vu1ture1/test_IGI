@@ -1,0 +1,83 @@
+<head>
+    <style>
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .dep-card {
+            position: relative;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            height: 100%;
+            min-width: 300px;
+            min-height: 350px;
+            margin-bottom: 10px;
+        }
+
+        .dep-card form {
+            position: absolute;  
+            right: 0;           
+            bottom: 0;         
+        }
+
+        .image {
+            width: 200px;
+            height: auto;
+        }
+
+        .news-container {
+            display: grid;
+            grid-template-columns: 1fr;
+    
+            gap: 20px;
+            
+            width: 60%;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .news-container p {
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .news-item {
+            display: flex;
+            border: 1px solid #ccc;
+            padding: 5px;
+            align-items: center; /* Это выравнивает изображение и информацию по вертикали */
+            gap: 20px; /* Это добавляет пространство между изображением и информацией */
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+{% extends "base.html" %}
+{% block refs%}{% endblock refs%}
+
+{% block content %}
+<h1 class="center">Новости аптеки</h1>
+<div class="news-container">
+    {%if news|length != 0%}
+            {% for n in news %} 
+                <div class="news-item">
+                <img class="image" src={{ n.news_png.url }}>
+                    <div style="word-wrap: break-word;">
+                            
+                        <p style="color: gray; font-size: 15px;">Дата: {{n.date_created}}</p>
+                        <p style="font-size: 20px;">Содержание: {{n.news_message}}</p>
+            
+                    </div>
+                </div>
+            {% endfor %}
+        {%else%}
+            <p>Нет новостей на текущий момент.</p>
+        {%endif%}
+</div>
+{% endblock content %}

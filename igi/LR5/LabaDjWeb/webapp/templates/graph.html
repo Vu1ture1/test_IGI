@@ -1,0 +1,32 @@
+<head>
+    <style>
+        .image {
+            width: auto;
+            height: auto;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            margin-bottom: 70px;
+        }
+    </style>
+</head>
+
+
+{% extends "base.html" %}
+
+{% block refs%}{% endblock refs%}
+
+{% block content %}
+
+<h2 class="center">График заказов производившихся в течении текущего месяца</h2>
+
+<div class="center">
+    <img class="image" src={{ graph_path.plot_png.url }}>
+    <p style="font-size: 20px;">Общая выручка за месяц: {{total}}{{" руб."}}</p>
+</div>
+
+{% endblock content %}
